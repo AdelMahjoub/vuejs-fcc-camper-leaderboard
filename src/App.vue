@@ -17,7 +17,7 @@ export default {
   name: 'app',
   components: {
     Navbar,
-    Board
+    Board,
   }
 }
 </script>

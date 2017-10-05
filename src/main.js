@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import 'font-awesome/css/font-awesome.min.css';
 import 'bulma/css/bulma.css';
+import 'animate.css/animate.min.css';
 
 Vue.prototype.$http = axios;
 

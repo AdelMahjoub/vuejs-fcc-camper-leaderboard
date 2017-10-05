@@ -36,55 +36,60 @@
               <th :class="{'is-hidden': screenWidth < screenBreakPoints.small /* hide table column on screen-size < 590px */}">last update</th>
             </tr>
           </thead>
-          <tbody>
-            <tr
-            @click="highlighted = camper['#'] /* highlight the row on click */"
-            :class="{'is-selected': highlighted === camper['#']}"
-            :key="`camper-${camper['#']}`" 
-            v-for="camper in filtered">
-              <td><b>{{ camper['#'] /* camper ranking */}}</b></td>
-              <td>
-                <div class="field">
-                  <!-- .level class hiearchy to align the username ang the image -->
-                  <div :class="{'level': screenWidth >= screenBreakPoints.medium /* no .level hiearchy on screen-size < 770px */}">
-                    <div :class="{'level-left': screenWidth >= screenBreakPoints.medium, 'level-fixed': screenWidth >= screenBreakPoints.medium /* no .level hiearchy on screen-size < 770px */}">
-                      <div 
-                      class="level-item"
-                      :class="{'is-hidden': screenWidth < screenBreakPoints.medium, 'level-fixed--img': screenWidth >= screenBreakPoints.medium /* hide image on screen-size < 770px */}">
-                        <img
-                        v-show="camper.imgLoaded /* only render when the image is fully loaded */"
-                        :src="camper.img" alt="camper profile image" width="32">
-                        <!-- display a loading icon when the image in not fully loaded -->
-                        <a
-                        v-show="!camper.imgLoaded"
-                        class="button is-link is-loading is-small"></a>
-                      </div>
-                      <div :class="{'level-item': screenWidth >= screenBreakPoints.medium /* no .level hiearchy on screen-size < 770px */}">
-                        <a 
-                        :href="`${portfolioLinkPrefix}${camper.username}`"
-                        target="_blank">
-                          {{ camper.username }}
-                        </a>
+          <!-- <tbody> -->
+            <transition-group
+            appear
+            tag="tbody"
+            enter-active-class="animated slideInLeft">
+              <tr
+              @click="highlighted = camper['#'] /* highlight the row on click */"
+              :class="{'is-selected': highlighted === camper['#']}"
+              :key="`camper-${camper['#']}`" 
+              v-for="camper in filtered">
+                <td><b>{{ camper['#'] /* camper ranking */}}</b></td>
+                <td>
+                  <div class="field">
+                    <!-- .level class hiearchy to align the username ang the image -->
+                    <div :class="{'level': screenWidth >= screenBreakPoints.medium /* no .level hiearchy on screen-size < 770px */}">
+                      <div :class="{'level-left': screenWidth >= screenBreakPoints.medium, 'level-fixed': screenWidth >= screenBreakPoints.medium /* no .level hiearchy on screen-size < 770px */}">
+                        <div 
+                        class="level-item"
+                        :class="{'is-hidden': screenWidth < screenBreakPoints.medium, 'level-fixed--img': screenWidth >= screenBreakPoints.medium /* hide image on screen-size < 770px */}">
+                          <img
+                          v-show="camper.imgLoaded /* only render when the image is fully loaded */"
+                          :src="camper.img" alt="camper profile image" width="32">
+                          <!-- display a loading icon when the image in not fully loaded -->
+                          <a
+                          v-show="!camper.imgLoaded"
+                          class="button is-link is-loading is-small"></a>
+                        </div>
+                        <div :class="{'level-item': screenWidth >= screenBreakPoints.medium /* no .level hiearchy on screen-size < 770px */}">
+                          <a 
+                          :href="`${portfolioLinkPrefix}${camper.username}`"
+                          target="_blank">
+                            {{ camper.username }}
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </td>
-              <td>
-                <span class="has-text-info">
-                  <b>{{ camper.alltime }}</b>
-                </span>
-              </td>
-              <td>
-                <span class="has-text-info">
-                  <b>{{ camper.recent }}</b>
-                </span>
-              </td>
-              <td :class="{'is-hidden': screenWidth < screenBreakPoints.small /* hide table column on screen-size < 590px */}">
-                <span class="has-text-dark">{{ (new Date(camper.lastUpdate)).toLocaleDateString() }}</span>
-              </td>
-            </tr>
-          </tbody>
+                </td>
+                <td>
+                  <span class="has-text-info">
+                    <b>{{ camper.alltime }}</b>
+                  </span>
+                </td>
+                <td>
+                  <span class="has-text-info">
+                    <b>{{ camper.recent }}</b>
+                  </span>
+                </td>
+                <td :class="{'is-hidden': screenWidth < screenBreakPoints.small /* hide table column on screen-size < 590px */}">
+                  <span class="has-text-dark">{{ (new Date(camper.lastUpdate)).toLocaleDateString() }}</span>
+                </td>
+              </tr>
+            </transition-group>
+          <!-- </tbody> -->
         </table>
         <!-- loading icon -->
         <div v-else>
@@ -248,7 +253,11 @@ export default {
           break;
         default:
       }
-      const startIndex = (this.pagination.currentPage - 1) * this.pagination.perPage;
+      let startIndex = (this.pagination.currentPage - 1) * this.pagination.perPage;
+      if(Boolean(this.order.searchTerm)) {
+        this.pagination.currentPage = 1;
+        startIndex = 0;
+      }
       return filtered.slice(startIndex, this.pagination.perPage * this.pagination.currentPage);
     },
     // dp: delta-page => 1 or -1
@@ -265,6 +274,7 @@ export default {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
     })
+    this.$parent.$emit('board-mounted')
   }
 }
 </script>
