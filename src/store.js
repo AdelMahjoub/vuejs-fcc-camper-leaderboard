@@ -3,7 +3,8 @@ const store = {
     searchTerm: '',
     rankingMode: 'alltime',
     sortTerm: 'brownies',
-    reverse: false
+    reverse: false,
+    browniesMode: 'alltime'
   },
   rankingModes: ['alltime', 'recent'],
   sortTerms: ['alpha', 'brownies'],

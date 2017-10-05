@@ -12,8 +12,8 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>camper</th>
-              <th>
+              <th @click="order.sortTerm='alpha'; order.reverse = !order.reverse">camper</th>
+              <th @click="order.sortTerm='brownies'; order.browniesMode='alltime'; order.reverse = !order.reverse">
                 <div class="field">
                   <span>all time</span>
                   <img
@@ -23,7 +23,7 @@
                   width="16">
                 </div>
               </th>
-              <th>
+              <th @click="order.sortTerm='brownies'; order.browniesMode='recent'; order.reverse = !order.reverse">
                 <div class="field">
                   <span>recent</span>
                   <img
@@ -240,7 +240,7 @@ export default {
       switch(this.order.sortTerm) {
         // sort by brownies
         case 'brownies':
-          filtered.sort((a, b) => (a[this.order.rankingMode] - b[this.order.rankingMode]) * orderedBy);
+          filtered.sort((a, b) => (a[this.order.browniesMode] - b[this.order.browniesMode]) * orderedBy);
           break;
         case 'alpha':
         // alphabetic sort
@@ -275,6 +275,9 @@ thead {
 }
 tbody {
   font-family: 'Slabo 27px', serif;
+}
+th {
+  cursor: pointer;
 }
 .hr {
   border: 1px solid whitesmoke;
