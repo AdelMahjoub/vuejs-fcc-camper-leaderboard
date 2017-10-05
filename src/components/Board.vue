@@ -214,7 +214,6 @@ export default {
     setPagination() {
       this.pagination.totalItems = this.campers.length;
       this.pagination.lastPage = Math.ceil(this.pagination.totalItems / this.pagination.perPage);
-      this.set('pagination', {});
     },
     filter() {
       // array to return
